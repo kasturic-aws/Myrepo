@@ -14,7 +14,6 @@ pipeline {
                 script {
                     def gitContentFolder = 'my_git_content'
                     // Create the directory if it doesn't exist
-                    sh "mkdir -p $gitContentFolder"
                     dir(gitContentFolder) {
                         // Clean the directory before pulling
                         sh "rm -rf ./*"
