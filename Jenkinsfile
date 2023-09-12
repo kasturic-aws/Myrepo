@@ -4,21 +4,24 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from the repository
+                // Check out code from the repository
                 checkout scm
             }
         }
 
         stage('Pull Git Content') {
             steps {
-                sh """
-                mkdir -p my_git_content
-                cd my_git_content
-                git init
-                git remote add origin ${env.GIT_URL}
-                git fetch --depth 1 origin develop
-                git checkout develop
-                """
+                script {
+                    def gitContentFolder = 'my_git_content'
+                    // Create the directory if it doesn't exist
+                    sh "mkdir -p $gitContentFolder"
+                    dir(gitContentFolder) {
+                        // Clean the directory before pulling
+                        sh "rm -rf ./*"
+                        // Clone the repository to the specified folder
+                        sh "git clone --branch develop --single-branch ${env.GIT_URL} ."
+                    }
+                }
             }
         }
 
@@ -28,6 +31,7 @@ pipeline {
     post {
         always {
             // Clean up, notify, or perform any other post-pipeline tasks
+            echo "Hello, World!"  // This is a simple example step
         }
     }
 }
