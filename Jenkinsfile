@@ -11,13 +11,14 @@ pipeline {
 
         stage('Pull Git Content') {
             steps {
-                script {
-                    def gitContentFolder = 'my_git_content'
-                    dir(gitContentFolder) {
-                        // Clone the repository to the specified folder
-                        sh "git clone --branch develop --single-branch ${env.BUILD_URL}.git ."
-                    }
-                }
+                sh """
+                mkdir -p my_git_content
+                cd my_git_content
+                git init
+                git remote add origin ${env.GIT_URL}
+                git fetch --depth 1 origin develop
+                git checkout develop
+                """
             }
         }
 
